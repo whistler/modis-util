@@ -1,0 +1,4 @@
+boto3
+nose
+pandas
+sphinx
