@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from modis import coordinates
 
 import unittest

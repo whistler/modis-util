@@ -1,4 +1,4 @@
-boto3
-nose
-pandas
-sphinx
+boto3==1.4.7
+pytest==3.2.5
+pandas==0.21.0
+sphinx==1.6.5
