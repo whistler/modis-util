@@ -662,7 +662,6 @@ def _load_coordinates():
     coordinates_df = pd.read_csv(coordinates_io, delimiter=r"\s+")
     return coordinates_df
 
-COORDINATES_TABLE = _load_coordinates()
 
 def latlng_to_modis(lat_deg, lng_deg):
     """
@@ -692,3 +691,6 @@ def latlng_to_modis(lat_deg, lng_deg):
         print('Warning: Coordinates ({}, {}) lie on chip boundary'.format(lat_deg, lng_deg))
 
     return coordinates['iv'].iloc[0], coordinates['ih'].iloc[0]
+
+
+COORDINATES_TABLE = _load_coordinates()

@@ -6,7 +6,8 @@ import unittest
 class TestCore(unittest.TestCase):
 
     def test_parse_scene_id(self):
-        product_id, v, h = core.parse_scene_id('MCD43A4.A2016001.h18v17.006.2016174081859')
-        assert product_id == 'MCD43A4'
+        product_id, v, h, date = core.parse_scene_id('MCD43A4.A2016001.h18v17.006.2016174081859')
+        assert product_id == 'MCD43A4.006'
         assert v == 17
         assert h == 18
+        assert date == '2016001'

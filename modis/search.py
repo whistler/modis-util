@@ -12,16 +12,6 @@ from . import coordinates
 s3 = boto3.resource('s3')
 
 
-def _get_s3_key(product_id, date):
-    index_filename = '{:04d}-{:02d}-{:02d}_scenes.txt'.format(date.year, date.month, date.day)
-    s3_key = os.path.join(product_id, index_filename)
-    return s3_key
-
-def _get_s3_file(key):
-    index_file_obj = s3.Object(core.MODIS_BUCKET, key)
-    file_content = index_file_obj.get()['Body'].read().decode('utf-8')
-    return file_content
-
 def search(product_id, lat, lng, date):
     """
     Find scene for a product using date and coordinates
@@ -56,3 +46,13 @@ def search(product_id, lat, lng, date):
     return list(results['gid'])
 
 
+def _get_s3_key(product_id, date):
+    index_filename = '{:04d}-{:02d}-{:02d}_scenes.txt'.format(date.year, date.month, date.day)
+    s3_key = os.path.join(product_id, index_filename)
+    return s3_key
+
+
+def _get_s3_file(key):
+    index_file_obj = s3.Object(core.MODIS_BUCKET, key)
+    file_content = index_file_obj.get()['Body'].read().decode('utf-8')
+    return file_content
