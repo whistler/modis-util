@@ -11,3 +11,7 @@ class TestCore(unittest.TestCase):
         assert v == 17
         assert h == 18
         assert date == '2016001'
+
+    def test_parse_invalid_scene_id(self):
+        with self.assertRaises(ValueError):
+            core.parse_scene_id('MCD43A4.A2017006.h21v')

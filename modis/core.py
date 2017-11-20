@@ -17,6 +17,9 @@ def parse_scene_id(scene_id):
         date (str): Modis date string in format YYYYDDD
     """
     matches = re.search('^(\w{7})\.A(\d*)\.h(\d*)v(\d*)\.(\d*)', scene_id)
+    if not matches:
+        raise ValueError('Scene id {} is not valid'.format(scene_id))
+
     product_id = matches.group(1) + '.' + matches.group(5)
     date_str = matches.group(2)
     h = int(matches.group(3))

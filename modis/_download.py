@@ -54,13 +54,16 @@ def list_files(scene_id):
     """
     prefix = _get_s3_prefix(scene_id)
     objects = s3.list_objects_v2(Bucket=core.MODIS_BUCKET, Prefix=prefix)
-    keys = [obj['Key'] for obj in objects['Contents']]
-    return keys
+    if 'Contents' in objects:
+        keys = [obj['Key'] for obj in objects['Contents']]
+        return keys
+    else:
+        return []
 
 
 def _get_s3_prefix(scene_id):
     product_id, v, h, date = core.parse_scene_id(scene_id)
-    scene_prefix = '{}/{}/{}/{}/'.format(product_id, h, v, date)
+    scene_prefix = '{}/{:02d}/{:02d}/{}/'.format(product_id, h, v, date)
     return scene_prefix
 
 

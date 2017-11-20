@@ -1,4 +1,5 @@
 import boto3
+import botocore
 import datetime
 import os
 import pandas as pd
@@ -25,7 +26,7 @@ def search(product_id, lat, lng, date):
     Returns:
         scene_id (string): Scene if of the found Modis scene or None if nothing was found
     """
-    if product_id not in products.ModisProducts.__dict__.values():
+    if product_id not in products.__dict__.values():
         raise ValueError('Unsupported product id')
 
     if not isinstance(date, datetime.date):
@@ -33,6 +34,9 @@ def search(product_id, lat, lng, date):
 
     s3_key = _get_s3_key(product_id, date)
     index = _get_s3_file(s3_key)
+    if index is None:
+        return []
+
     index_io = six.StringIO(index)
     index_df = pd.read_csv(index_io)
 
@@ -53,6 +57,10 @@ def _get_s3_key(product_id, date):
 
 
 def _get_s3_file(key):
-    index_file_obj = s3.Object(core.MODIS_BUCKET, key)
-    file_content = index_file_obj.get()['Body'].read().decode('utf-8')
-    return file_content
+    try:
+        index_file_obj = s3.Object(core.MODIS_BUCKET, key)
+        file_content = index_file_obj.get()['Body'].read().decode('utf-8')
+        return file_content
+    except botocore.exceptions.ClientError as e:
+        if e.response['Error']['Code'] == 'NoSuchKey':
+            return None

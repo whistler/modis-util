@@ -658,6 +658,7 @@ iv  ih    lon_min    lon_max   lat_min   lat_max
 
 
 def _load_coordinates():
+    # TODO: This is slow, convert SINOSOIDAL_GRID_COORDINATES_STRING to a dict of lists
     coordinates_io = StringIO(SINOSOIDAL_GRID_COORDINATES_STRING)
     coordinates_df = pd.read_csv(coordinates_io, delimiter=r"\s+")
     return coordinates_df
@@ -686,9 +687,12 @@ def latlng_to_modis(lat_deg, lng_deg):
     is_lat_in_bounds = (COORDINATES_TABLE['lat_min'] <= lat_deg) & (COORDINATES_TABLE['lat_max'] >= lat_deg)
     coordinates = COORDINATES_TABLE[is_lng_in_bounds & is_lat_in_bounds]
 
-    assert 1 <= len(coordinates) <= 4, 'There is a problem with coordinate conversion, please report a bug'
+    # It is possible that a coordinate is present in upto four chips if both latitude and longitude are on the chip
+    # boundary. It is not clear how Modis grid handles boundaries.
+    # TODO: Update this method to return a list of coordinates, it is possible that a LatLng cooresponds to multiple
+    # valid Modis coordinates.
     if len(coordinates) > 1:
-        print('Warning: Coordinates ({}, {}) lie on chip boundary'.format(lat_deg, lng_deg))
+        print('Warning: Only one of multiple Modis coordinates is being used'.format(lat_deg, lng_deg))
 
     return coordinates['iv'].iloc[0], coordinates['ih'].iloc[0]
 

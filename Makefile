@@ -3,3 +3,9 @@ init:
 
 test:
 	pytest tests
+
+build:
+	python setup.py sdist
+
+upload:
+	twine upload dist/*
